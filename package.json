@@ -1,0 +1,9 @@
+{
+    "name": "spotify-widget",
+    "version": "0.1.0",
+    "main": "index.js",
+    "dependencies": {},
+    "devDependencies": {
+        "electron": "1.7.12"
+    }
+}

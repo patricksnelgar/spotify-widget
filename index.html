@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script type="text/javascript">
+        var noDevice;
+        var spotifyInfo;
+        window.setInterval(function(){
+            var container = document.getElementById('container');
+            var songInfo = JSON.parse(getNowPlaying());
+            if(songInfo['artist'] == null) {
+                noDevice.style.display = 'block';
+                spotifyInfo.style.display = 'none';
+                return;
+            }
+            
+            noDevice.style.display = 'none';
+            spotifyInfo.style.display = 'block';
+            document.getElementById('song-title').innerHTML = songInfo['song_title'];
+            document.getElementById('song-artist').innerHTML = songInfo['artist'];
+            document.getElementById('song-album').innerHTML = songInfo['album'];
+            document.getElementById('song-artwork').src = songInfo['album_art'];
+
+        }, 1000);
+
+        function getNowPlaying(){
+            var req = new XMLHttpRequest();
+            /*
+            req.onreadystatechange = function() {
+                if(req.readyState == 4 && req.status == 200)
+                    return req.responseText;
+            }
+            */
+            req.open('GET', 'http://localhost/nowPlaying', false);
+            req.send(null); 
+            return req.responseText;           
+        }
+
+        window.onload = function() {
+            noDevice = document.getElementById('no_device');
+            spotifyInfo = document.getElementById('song_info');
+        }
+    </script>
+</head>
+<body>
+    <div id='container'>
+        <div id='no_device' style="display: none">No Device</div>
+        <div id='song_info' style="display: none">
+            <div id='song-artwork-containter' style="float: left; margin-right: 10px;">
+                <img id='song-artwork' src='' width="150" height="150"/>
+            </div>
+            <div id='song-title' style="font-size: 14pt"></div>
+            <div id='song-artist'style="font-size: 12pt; color: #222222 "></div>
+            <div id='song-album' style="font-size: 12pt; color: #333333"></div>
+            
+        </div> 
+    </div>
+</body>
+</html>
