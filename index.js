@@ -5,8 +5,8 @@ const path = require('path');
 let win
 
 function createWindow(){
-    var width = 400; var height = 200;
-    win = new BrowserWindow({width: width, height: height, show: false, frame: false, backgroundColor: '#666666'});
+    var width = 500; var height = 230;
+    win = new BrowserWindow({width: width, height: height, show: false, frame: true, backgroundColor: '#666666'});
     win.loadURL(url.format({pathname: path.join(__dirname,"index.html"),
                             protocol: 'file:',
                             slashes: true}));

@@ -3,12 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <link rel="stylesheet" href="css\bootstrap.min.css"/>
     <script type="text/javascript">
         var noDevice;
         var spotifyInfo;
-        window.setInterval(function(){
+        var currentSong;
+        var newSong = false;
+
+        function getMinutes(ms){
+            var min = Math.floor(ms/60000);
+            var sec = ((ms % 60000) / 1000).toFixed(0);
+           
+            return (sec == 60 ? (min + 1) + '.00' : min + '.' + (sec < 10 ? '0' + sec : sec));
+        }
+
+        function updateSongInfo(){
             var container = document.getElementById('container');
             var songInfo = JSON.parse(getNowPlaying());
+
+            if(currentSong != songInfo['song_title']){
+                //alert('new song!');
+                document.getElementById('progress-bar').style.width = '0%';
+            } 
+            
+            currentSong = songInfo['song_title'];
+
             if(songInfo['artist'] == null) {
                 noDevice.style.display = 'block';
                 spotifyInfo.style.display = 'none';
@@ -21,8 +40,18 @@
             document.getElementById('song-artist').innerHTML = songInfo['artist'];
             document.getElementById('song-album').innerHTML = songInfo['album'];
             document.getElementById('song-artwork').src = songInfo['album_art'];
+            var progress = getMinutes(songInfo['progress']);
+            //alert(progress);
+            document.getElementById('progress').innerHTML = progress;
+            var percent = songInfo['progress'] / songInfo['duration'];
+            //alert(percent)
 
-        }, 1000);
+            document.getElementById('progress-bar').style.width = percent.toFixed(2)*100 + '%';
+
+            document.getElementById('duration').innerHTML = getMinutes(songInfo['duration']);
+        }
+
+        window.setInterval(updateSongInfo, 1000);
 
         function getNowPlaying(){
             var req = new XMLHttpRequest();
@@ -40,20 +69,32 @@
         window.onload = function() {
             noDevice = document.getElementById('no_device');
             spotifyInfo = document.getElementById('song_info');
+            currentSong = "nothing";
+            
         }
+
+        
     </script>
 </head>
-<body>
-    <div id='container'>
+<body style="display:inline;margin:0px;">
+    <div class="container" style="width:400px;background:#555555;">
         <div id='no_device' style="display: none">No Device</div>
-        <div id='song_info' style="display: none">
-            <div id='song-artwork-containter' style="float: left; margin-right: 10px;">
-                <img id='song-artwork' src='' width="150" height="150"/>
+        <div id='song_info' class="row" >
+            <div id='song-artwork-containter' class="col-xs-5">
+                <img class="img-rounded" id='song-artwork' src='https://i.scdn.co/image/810722a11d4256484ac2bc72229379a2d0252388' width="150" height="150"/>
             </div>
-            <div id='song-title' style="font-size: 14pt"></div>
-            <div id='song-artist'style="font-size: 12pt; color: #222222 "></div>
-            <div id='song-album' style="font-size: 12pt; color: #333333"></div>
-            
+            <div class="col-xs-7">
+                <div id='song-title' style="font-size: 14pt;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;">Father</div>
+                <div id='song-artist'style="font-size: 12pt; color: #222222;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;">Dreamshade</div>
+                <div id='song-album' style="font-size: 12pt; color: #333333;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;">Vibrant</div>
+                <div id="progress-container">
+                    <div class="progress" style="height:5px;margin-top:5px;margin-bottom:5px;">
+                        <div id="progress-bar" class="progress-bar" role="progressbar"></div>
+                    </div>
+                    <div id="progress" style="display:inline">1:20</div>
+                    <div id="duration" style="display:inline;float:right">4:30</div>
+                </div>
+            </div>
         </div> 
     </div>
 </body>
