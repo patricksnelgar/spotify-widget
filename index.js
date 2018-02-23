@@ -22,6 +22,6 @@ app.on('activate', () => {
         createWindow();
 });
 
-var file = 'index.html';
+var file = 'widget.html';
 
 console.log('PATH: ', path.join(__dirname, file));
